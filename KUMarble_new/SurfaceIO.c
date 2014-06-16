@@ -174,27 +174,29 @@ void SIO_PrtInfo(const PLAYER *player, const UNIV *univ)
 	SIO_TurnColor(P2_SEMI);
 	gotoxy(60, 15);	printf("%7d만원", player[P2].money);
 	gotoxy(60, 16);	printf("%7d쿼터", player[P2].round);
+}
 
-
+void SIO_PrtLogo(const UNIV *univ)
+{
 	// 단계별 로고
 	SIO_TurnColor(P1);
 	gotoxy(76, 0);	printf("고려대학교 Lv%d", univ[P1].level);
 	SIO_TurnColor(P1_SEMI);
 	if (univ[P1].level == 1)
 	{
-		gotoxy(78, 1);	printf("        ㄱ                              ");
-		gotoxy(78, 2);	printf("        ㅗ                              ");
-		gotoxy(78, 3);	printf(" K   K                                  ");
-		gotoxy(78, 4);	printf(" K   K                                  ");
-		gotoxy(78, 5);	printf(" K   K                                  ");
-		gotoxy(78, 6);	printf(" K  KK                                  ");
-		gotoxy(78, 7);	printf(" K KK                                   ");
-		gotoxy(78, 8);	printf(" KKK                                    ");
-		gotoxy(78, 9);	printf(" K KK                                   ");
-		gotoxy(78, 10);	printf(" K  KK                                  ");
-		gotoxy(78, 11);	printf(" K   K                                  ");
-		gotoxy(78, 12);	printf(" K   K                                  ");
-		gotoxy(78, 13);	printf(" K   K                                  ");
+		gotoxy(78, 1);	printf("  고양이           Y$ov:                ");
+		gotoxy(78, 2);	printf("  야옹야옹        :M$vYzC..     .;Y     ");
+		gotoxy(78, 3);	printf("                  Y9;iCb#$$IiivcCI:     ");
+		gotoxy(78, 4);	printf("                 vv::7C6$MW#n;IQ$Y      ");
+		gotoxy(78, 5);	printf("                .B@X$MY.Wc7CC,ZMn       ");
+		gotoxy(78, 6);	printf("                ,9b#U#i:.:QA,.Cb        ");
+		gotoxy(78, 7);	printf("          .tb#bno$c  YM;:;IAX@Y         ");
+		gotoxy(78, 8);	printf("         ;E;CSX;9$M0. .   ,CUo          ");
+		gotoxy(78, 9);	printf("        XEY .in#W#@MM0SZEQE0#$.         ");
+		gotoxy(78, 10);	printf("       iM$c:vz#b$QEWMMMMMM@@$Q.         ");
+		gotoxy(78, 11);	printf("      :YI$C:tQC7X1Uo7nEbZZZZ2i          ");
+		gotoxy(78, 12);	printf("    oEMM,Y1vC2i. ,;vC i86WQCUi          ");
+		gotoxy(78, 13);	printf("    ;UQ#YA@MYCZWb7C;CYbMME7oSEo;        ");
 	}
 	else if (univ[P1].level == 2)
 	{
@@ -609,205 +611,22 @@ void SIO_InitConsoleSize (int y)
 }
 
 
-
-void SIO_PrtLogo(const PLAYER *player, const UNIV *univ)
+//An alternative to the SIO_PrintLogo
+void SIO_PrtMinigameBase()
 {
-	// 단계별 로고
-	SIO_TurnColor(P1);
-	gotoxy(76, 0);	printf("고려대학교 Lv%d", univ[P1].level);
-	SIO_TurnColor(P1_SEMI);
-	if (univ[P1].level == 1)
-	{
-		gotoxy(78, 1);	printf("        ㄱ                              ");
-		gotoxy(78, 2);	printf("        ㅗ                              ");
-		gotoxy(78, 3);	printf(" K   K                                  ");
-		gotoxy(78, 4);	printf(" K   K                                  ");
-		gotoxy(78, 5);	printf(" K   K                                  ");
-		gotoxy(78, 6);	printf(" K  KK                                  ");
-		gotoxy(78, 7);	printf(" K KK                                   ");
-		gotoxy(78, 8);	printf(" KKK                                    ");
-		gotoxy(78, 9);	printf(" K KK                                   ");
-		gotoxy(78, 10);	printf(" K  KK                                  ");
-		gotoxy(78, 11);	printf(" K   K                                  ");
-		gotoxy(78, 12);	printf(" K   K                                  ");
-		gotoxy(78, 13);	printf(" K   K                                  ");
-	}
-	else if (univ[P1].level == 2)
-	{
-		gotoxy(78, 1);	printf("        ㄱ   ㄹㅕ                        ");
-		gotoxy(78, 2);	printf("        ㅗ                               ");
-		gotoxy(78, 3);	printf(" K   K    OOOO                           ");
-		gotoxy(78, 4);	printf(" K   K   OO  OO                          ");
-		gotoxy(78, 5);	printf(" K   K   O    O                          ");
-		gotoxy(78, 6);	printf(" K  KK   O    O                          ");
-		gotoxy(78, 7);	printf(" K KK    O    O                          ");
-		gotoxy(78, 8);	printf(" KKK     O    O                          ");
-		gotoxy(78, 9);	printf(" K KK    O    O                          ");
-		gotoxy(78, 10);	printf(" K  KK   O    O                          ");
-		gotoxy(78, 11);	printf(" K   K   O    O                          ");
-		gotoxy(78, 12);	printf(" K   K   OO  OO                          ");
-		gotoxy(78, 13);	printf(" K   K    OOOO                           ");
-	}
-	else if (univ[P1].level == 3)
-	{
-		gotoxy(78, 1);	printf("        ㄱ   ㄹㅕ  ㄷㅐ                  ");
-		gotoxy(78, 2);	printf("        ㅗ                               ");
-		gotoxy(78, 3);	printf(" K   K    OOOO    RRR                    ");
-		gotoxy(78, 4);	printf(" K   K   OO  OO   R  R                   ");
-		gotoxy(78, 5);	printf(" K   K   O    O   R   R                  ");
-		gotoxy(78, 6);	printf(" K  KK   O    O   R   R                  ");
-		gotoxy(78, 7);	printf(" K KK    O    O   R  R                   ");
-		gotoxy(78, 8);	printf(" KKK     O    O   RRR                    ");
-		gotoxy(78, 9);	printf(" K KK    O    O   R  R                   ");
-		gotoxy(78, 10);	printf(" K  KK   O    O   R   R                  ");
-		gotoxy(78, 11);	printf(" K   K   O    O   R   R                  ");
-		gotoxy(78, 12);	printf(" K   K   OO  OO   R   R                  ");
-		gotoxy(78, 13);	printf(" K   K    OOOO    R   R                  ");
-	}
-	else if (univ[P1].level == 4)
-	{
-		gotoxy(78, 1);	printf("        ㄱ   ㄹㅕ  ㄷㅐ ㅎㅏ  ㄱ         ");
-		gotoxy(78, 2);	printf("        ㅗ                ㄱ  ㅛ         ");
-		gotoxy(78, 3);	printf(" K   K    OOOO    RRR     EEEEE          ");
-		gotoxy(78, 4);	printf(" K   K   OO  OO   R  R    E              ");
-		gotoxy(78, 5);	printf(" K   K   O    O   R   R   E              ");
-		gotoxy(78, 6);	printf(" K  KK   O    O   R   R   E              ");
-		gotoxy(78, 7);	printf(" K KK    O    O   R  R    E              ");
-		gotoxy(78, 8);	printf(" KKK     O    O   RRR     EEEEE          ");
-		gotoxy(78, 9);	printf(" K KK    O    O   R  R    E              ");
-		gotoxy(78, 10);	printf(" K  KK   O    O   R   R   E              ");
-		gotoxy(78, 11);	printf(" K   K   O    O   R   R   E              ");
-		gotoxy(78, 12);	printf(" K   K   OO  OO   R   R   E              ");
-		gotoxy(78, 13);	printf(" K   K    OOOO    R   R   EEEEE          ");
-	}
-	else if (univ[P1].level >= 5)
-	{
-		gotoxy(78, 1);	printf("        ㄱ   ㄹㅕ  ㄷㅐ ㅎㅏ  ㄱ ||      ");
-		gotoxy(78, 2);	printf("        ㅗ                ㄱ  ㅛ ``      ");
-		gotoxy(78, 3);	printf(" K   K    OOOO    RRR     EEEEE      A   ");
-		gotoxy(78, 4);	printf(" K   K   OO  OO   R  R    E         A A  ");
-		gotoxy(78, 5);	printf(" K   K   O    O   R   R   E        A   A ");
-		gotoxy(78, 6);	printf(" K  KK   O    O   R   R   E       A     A");
-		gotoxy(78, 7);	printf(" K KK    O    O   R  R    E       A     A");
-		gotoxy(78, 8);	printf(" KKK     O    O   RRR     EEEEE   AAAAAAA");
-		gotoxy(78, 9);	printf(" K KK    O    O   R  R    E       A     A");
-		gotoxy(78, 10);	printf(" K  KK   O    O   R   R   E       A     A");
-		gotoxy(78, 11);	printf(" K   K   O    O   R   R   E       A     A");
-		gotoxy(78, 12);	printf(" K   K   OO  OO   R   R   E       A     A");
-		gotoxy(78, 13);	printf(" K   K    OOOO    R   R   EEEEE   A     A");
-	}
-/*
-고려대
+	int i;
 
-40*15에 맞는 그림이 없어서.. 일단 KOREA 글자로..
-*/
-	SIO_TurnColor(P2);
-	gotoxy(76, 14);	printf("연세대학교 Lv%d", univ[P2].level);
-	SIO_TurnColor(P2_SEMI);
-	if (univ[P2].level == 1)
+	gotoxy(76, 0);
+	printf("┌───── 미니  게임 ─────────┐");
+	for(i=1; i<=28; i++)
 	{
-		gotoxy(80, 15);	printf("                                       ");
-		gotoxy(80, 16);	printf("    7a808r       참새                  ");
-		gotoxy(80, 17);	printf("  2WMMBBMMM:      짹짹                 ");
-		gotoxy(80, 18);	printf("ZMMM8;i:X@MMi                          ");
-		gotoxy(80, 19);	printf("r:i@Z   ..SMW                          ");
-		gotoxy(80, 20);	printf("    Z,.,,SZZB8i                        ");
-		gotoxy(80, 21);	printf("    i:;Z@ZZSZBB@WX,                    ");
-		gotoxy(80, 22);	printf("    ii:8MBBBBW0WMMM@S:                 ");
-		gotoxy(80, 23);	printf("     i:,X;7ZWB0Z8ZSZ@MWr               ");
-		gotoxy(80, 24);	printf("     ,: X@MW80028B8Za8WMMZ,            ");
-		gotoxy(80, 25);	printf("      ;:.,i;772SaZ000Z80@MM02a27;:     ");
-		gotoxy(80, 26);	printf("       8@SiXXZZZ882Z8B82Xr7ri7Xa8@MMMM ");
-		gotoxy(80, 27);	printf("      :MMMW00WMMMM@X,              :S0 ");
-		gotoxy(80, 28);	printf("        :i0S @B:                       ");
-		gotoxy(80, 29);	printf("        i :;i.                         ");
+		gotoxy(76, i); printf("│");
+		gotoxy(118, i); printf("│");
 	}
-	else if (univ[P2].level == 2)
-	{
-		gotoxy(80, 15);	printf("                     iir               ");
-		gotoxy(80, 16);	printf("          닭둘기   iOU8@L_             ");
-		gotoxy(80, 17);	printf("       구구구구    @PXB1               ");
-		gotoxy(80, 18);	printf("                  MOkF@r               ");
-		gotoxy(80, 19);	printf("                 0O22F8Z               ");
-		gotoxy(80, 20);	printf("                :2uL55EB,              ");
-		gotoxy(80, 21);	printf("             ..,:.iu1qO@B              ");
-		gotoxy(80, 22);	printf("         :E: ,:i::ir7jZB@              ");
-		gotoxy(80, 23);	printf("      ::BLBB ,iriivjjL2@:              ");
-		gotoxy(80, 24);	printf("  :SBB@7@X.O@UL7uJ1uPB@r               ");
-		gotoxy(80, 25);	printf("  0@B@B@B@BYXMEG8S5GMS                 ");
-		gotoxy(80, 26);	printf(" 7@2;.:i:7XOXr;i;7ri                   ");
-		gotoxy(80, 27);	printf("            :: ir.                     ");
-		gotoxy(80, 28);	printf("             :;'i                      ");
-		gotoxy(80, 29);	printf("             :; i                      ");
-	}
-	else if (univ[P2].level == 3)
-	{
-		gotoxy(80, 15);	printf("                             ");
-		gotoxy(80, 16);	printf("                             ");
-		gotoxy(80, 17);	printf("         독수리              ");
-		gotoxy(80, 18);	printf("   m      새끼               ");
-		gotoxy(80, 19);	printf("   MM               m        ");
-		gotoxy(80, 20);	printf("   MMM            MMM        ");
-		gotoxy(80, 21);	printf("    aMMM:       MMMM         ");
-		gotoxy(80, 22);	printf("      BMMS,,rBMMMMM          ");
-		gotoxy(80, 23);	printf("      rM@MM@MMMMM            ");
-		gotoxy(80, 24);	printf("    @MMMMMMaMM@@MBi.ii:      ");
-		gotoxy(80, 25);	printf("   SMi   XS0MM@BWMMMM        ");
-		gotoxy(80, 26);	printf("           aMM888MM          ");
-		gotoxy(80, 27);	printf("         irWS;aWM            ");
-		gotoxy(80, 28);	printf("        ZM. X;M8             ");
-		gotoxy(80, 29);	printf("        :.   @               ");
-	}
-
-	else if (univ[P2].level == 4)
-	{
-		gotoxy(80, 15);	printf("                             ");
-		gotoxy(80, 16);	printf("  x     날아본다             ");
-		gotoxy(80, 17);	printf("  W8     독수리       x      ");
-		gotoxy(80, 18);	printf("  MMa                aM      ");
-		gotoxy(80, 19);	printf("   MM0             wMMW      ");
-		gotoxy(80, 20);	printf("   .MM@          aMMMa:      ");
-		gotoxy(80, 21);	printf("     aMM:       MMMMM;       ");
-		gotoxy(80, 22);	printf("      BMMS,,rBMMMMM0         ");
-		gotoxy(80, 23);	printf("      rM@MM@MMMMMW;          ");
-		gotoxy(80, 24);	printf("    @MMMMMMaMM@@MBi.ii:,,iXZ:");
-		gotoxy(80, 25);	printf("   MMMWX7XS0MM@BWMMMMMMMMMMZ ");
-		gotoxy(80, 26);	printf("  SMi      aMM888MMM@WMM@8   ");
-		gotoxy(80, 27);	printf("      2@@irWS;aWMMMMM@2;     ");
-		gotoxy(80, 28);	printf("      r ZM. X;M8ZMZ7;        ");
-		gotoxy(80, 29);	printf("        :.   @M              ");
-	}
-	else if (univ[P2].level >= 5)
-	{
-		gotoxy(80, 15);	printf("  .                     Z    ");
-		gotoxy(80, 16);	printf("  M     수리수리       MW    ");
-		gotoxy(80, 17);	printf("; WM     독수리      .MM     ");
-		gotoxy(80, 18);	printf(".ZaM8               XMMaS    ");
-		gotoxy(80, 19);	printf("  MMM0             WMMW0i    ");
-		gotoxy(80, 20);	printf("  ,MMM@          aMMMMMa:    ");
-		gotoxy(80, 21);	printf("    aMMM:      2MMMMMM2      ");
-		gotoxy(80, 22);	printf("      BMMS,,rBMMMMMM0,       ");
-		gotoxy(80, 23);	printf("      rM@MM@MMMMMW;          ");
-		gotoxy(80, 24);	printf("    @MMMMMMaMM@@MBi.ii:,,iXZ:");
-		gotoxy(80, 25);	printf("   MMMWX7XS0MM@BWMMMMMMMMMMZ ");
-		gotoxy(80, 26);	printf("  SMi      aMM888MMM@WMM@8   ");
-		gotoxy(80, 27);	printf("      2@@irWS;aWMMMMM@2;     ");
-		gotoxy(80, 28);	printf("      r ZM. X;M8ZMZ7;        ");
-		gotoxy(80, 29);	printf("        :.   @M              ");
-	}
-
-
-/*
-연세대
-
-1단계 : 참새
-2단계 : 비둘기
-3단계 : 새끼 독수리
-4단계 : 중간 독수리
-5단계 : 풀 독수리
-*/
+	gotoxy(76, 29);
+	printf("└────────────────────┘");
+	
 }
-
 
 void SIO_PrintMsg(char* msg)
 {

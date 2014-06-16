@@ -3,7 +3,7 @@
 
 #include <time.h>
 
-//#define DEBUG
+#define DEBUG
 
 #define KMVER 1.0
 #define KMDATE "2014.05.21"

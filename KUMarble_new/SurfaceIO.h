@@ -15,6 +15,9 @@ void SIO_PrtBuilding(int n);
 void SIO_PrtCityName (int n);
 void SIO_PrtPlayer(const PLAYER *p);
 void SIO_PrtInfo(const PLAYER *player, const UNIV *univ);
+void SIO_PrtLogo(const UNIV *univ);
+
+void SIO_PrtMinigameBase();
 
 void SIO_TurnColor(int n);
 

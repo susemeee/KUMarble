@@ -24,7 +24,7 @@ int main (int argc, char* argv[])
 	SIO_InitConsoleSize(30); // 창 크기 조정
 	SetConsoleTitleA("KUMarble : 고연전"); // 창 이름 조정
 	system("color 07"); // 바탕 검정 전경 흰색
-	TextColor(RGB8(1, 1, 1, 0));
+	//TextColor(RGB8(1, 1, 1, 0));
 	BGColor(RGB8(0, 0, 0, 0));
 
 // 시드 설정
@@ -35,6 +35,10 @@ int main (int argc, char* argv[])
 
 #ifndef DEBUG
 	ML_PrintStory();
+#else
+	TextColor(RGB8(1,0,0,1));
+	printf("\nDebug mode activated. please turn of this before production.\n\n");
+	TextColor(RGB8(1,1,1,1));
 #endif
 
 	loopin = 1;
@@ -69,7 +73,7 @@ int main (int argc, char* argv[])
 		else
 		{
 			printf("\n\n잘못된 입력입니다!\n\n");
-			Delay(10);
+			Delay(1000);
 			system("CLS");
 		}
 	}

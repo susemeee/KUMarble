@@ -49,10 +49,12 @@ void KUMarble ()
 	{
 		system("cls");
 // 초기화
-		SIO_InitBoard(); // 보드를 그리고
-		SIO_DrawBoard(); // 건물색 칠한다
-		SIO_PrtPlayer(player); // 말을 그린다.
-		SIO_PrtInfo(player, univ); // 돈, 대학 현황 표시
+		SIO_InitBoard();		  // 보드를 그리고
+		SIO_DrawBoard();		  // 건물색 칠한다
+		SIO_PrtPlayer(player);	  // 말을 그린다.
+		SIO_PrtInfo(player, univ);// 돈 현황 표시
+		SIO_PrtLogo(univ);		  //대학 현황 표시
+		SIO_PrtMinigameBase();
 
 		// 대학 로고 레벨 검사
 		ML_UnivLevelUp(turn, player, univ);
@@ -85,6 +87,14 @@ void KUMarble ()
 		else if (board[nowpos].owner != turn && board[nowpos].owner != -1)
 		{ // 남의 땅이고, 구매된 경우만
 			ML_PayLessonFee(turn, nowpos, player, univ); // 수업료를 지불한다
+		}
+		else if(strcmp(board[nowpos].name, GOLDEN_KEY) == 0)
+		{ // 황금열쇠 칸을 밟았을 경우
+			ML_ProcessGoldenKey(player, univ);
+		}
+		else if(strcmp(board[nowpos].name, HOSPITAL) == 0)
+		{
+			ML_ProcessHospital(player, univ);
 		}
 		turn = ML_ChangeTurn(turn); // 차례를 바꿔준다
 
@@ -324,6 +334,7 @@ void ML_UnivLevelUp(int turn, PLAYER player[], UNIV univ[])	// 대학 레벨업 여부
 			gotoxy(12, 7);	printf("장학금 %3d만원이 지급되었습니다.", need);
 			player[i].money += need;
 			SIO_PrtInfo(player, univ); // 정보 갱신
+			SIO_PrtLogo(univ);
 			Delay(WAIT * 2);
 		}
 		lastuniv[i] = univ[i].level;
@@ -379,13 +390,14 @@ int ML_ThrowDice(int turn, int dice[]) // 주사위 굴리기
 void ML_RoundMoney(int turn, PLAYER player[], UNIV univ[]) // 한 바퀴 돌면 주는 장학금
 {
 	int i = 0, need = 0;
-	static int morefee = 1;
+	static int morefee = 2;
 
 	player[turn].round++; // 바퀴 카운트 올리고
 	if (difficulty == GAME_HARD && player[turn].round >= 8 && morefee) // 어려움 난이도에서 수강료의 인상
 	{
-		morefee = 0;
+		morefee--;
 		gotoxy(12, 6);	printf("%s대가 수업료를 인상했습니다!     ", univ[turn].name);
+		gotoxy(12, 7);	printf("                                      ", univ[turn].name);
 		Delay(WAIT * 4);
 	}
 
@@ -415,6 +427,7 @@ void ML_RoundMoney(int turn, PLAYER player[], UNIV univ[]) // 한 바퀴 돌면 주는 
 	gotoxy(11, 6);	printf("                                    ");
 	gotoxy(11, 7);	printf("                                    ");
 	SIO_PrtInfo(player, univ); // 돈, 대학 현황 다시 표시
+	SIO_PrtLogo(univ);
 }
 
 void ML_BuyCity(int turn, int nowpos, PLAYER player[], UNIV univ[])  // 건물 짓기
@@ -456,6 +469,7 @@ void ML_BuyCity(int turn, int nowpos, PLAYER player[], UNIV univ[])  // 건물 짓�
 			player[turn].money -= need;
 			univ[turn].city_count++;
 			SIO_PrtInfo(player, univ);
+			SIO_PrtLogo(univ);
 
 			SIO_TurnColor(turn);
 			gotoxy(12, 6);	printf("%s을(를) 지었습니다!        ", CityName(turn, nowpos));
@@ -581,6 +595,7 @@ void ML_Ending(PLAYER player[], UNIV univ[])	// 승패 판단
 	stmp[P2][0] = '\0';
 
 	SIO_PrtInfo(player, univ); // 정보 갱신
+	SIO_PrtLogo(univ);
 // 게임 종료. y를 계속 눌렀을 때를 대비해서 Enter 입력받기
 	SIO_TurnColor(NEUTRAL);
 	gotoxy(12, 6);	printf("게임이 끝났습니다!            ");
@@ -684,5 +699,32 @@ void ML_PrintStory()
 		getch();
 		system("CLS");
 	}
+
+}
+
+void ML_ProcessGoldenKey(PLAYER player, UNIV univ)
+{
+	const char * wildlife_name[4] = {"임재민", "이동방", "윤민아", "김낙현"};
+	gotoxy(12, 7);
+
+	switch(rand()%3)
+	{
+
+	case 0:		//히어로(야생의 임재민을 만났다!)
+		printf("야생의 %s를\n만났다!", wildlife_name[(int)rand()%4]);
+
+		break;
+
+	case 1:		//장학금 받기
+		//printf
+		break;
+
+	case 2:		//성인지 감수성 교육
+		break;
+	}
+}
+
+void ML_ProcessHospital(PLAYER player, UNIV univ)
+{
 
 }
