@@ -34,6 +34,7 @@ int main (int argc, char* argv[])
 	cursorinit(); // 커서가 버퍼를 넘어가면 gotoxy가 정상작동하지 않는다.
 
 #ifndef DEBUG
+	TextColor(RGB8(1,1,1,1));
 	ML_PrintStory();
 #else
 	TextColor(RGB8(1,0,0,1));

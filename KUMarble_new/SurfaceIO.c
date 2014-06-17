@@ -402,11 +402,11 @@ void SIO_PrtCityName (int n)
 	if (n == 0)  // 0 시작하는 곳
 		printf(" 정문 ");
 	else if (n == 6)
-		printf("      "); // 나중에 대체할 것
+		printf(ACADEMY); // 6 오른쪽 아래 모서리
 	else if (n == 12)
 		printf(HOSPITAL); // 12 왼쪽 위 모서리
 	else if (n == 18)
-		printf("      "); // 나중에 대체할 것
+		printf(MT); // 18 오른쪽 위 모서리
 
 	SIO_TurnColor(NEUTRAL);
 	if (n == 8 || n == 15 || n == 20) // 황금열쇠

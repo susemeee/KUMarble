@@ -11,7 +11,7 @@
 #define TRUE 1
 #define FALSE 0
 
-#define WAIT 500
+#define WAIT 800
 #define PLAYER_NUMBER 2
 #define CITY_NUMBER 24
 
@@ -69,6 +69,8 @@ extern clock_t timepass;
 // 건물 이름들
 #define GOLDEN_KEY	"열§쇠"
 #define HOSPITAL " 병원 "
+#define ACADEMY "대학원"
+#define MT "  MT  "
 
 // 고대건물
 #define P1_CITY_01	"공학관"
@@ -76,7 +78,7 @@ extern clock_t timepass;
 #define P1_CITY_03	"유자유"
 #define P1_CITY_04	"고대빵"
 #define P1_CITY_05	"미디어"
-#define P1_CITY_06	"      "
+#define P1_CITY_06	ACADEMY
 #define P1_CITY_07	"이과대"
 #define P1_CITY_08	GOLDEN_KEY
 #define P1_CITY_09	" 화정 "
@@ -88,7 +90,7 @@ extern clock_t timepass;
 #define P1_CITY_15	GOLDEN_KEY
 #define P1_CITY_16	"창의관"
 #define P1_CITY_17	"도서관"
-#define P1_CITY_18	"      "
+#define P1_CITY_18	MT
 #define P1_CITY_19	"보건대"
 #define P1_CITY_20	GOLDEN_KEY
 #define P1_CITY_21	"정통관"
@@ -101,7 +103,7 @@ extern clock_t timepass;
 #define P2_CITY_03	"초가집"
 #define P2_CITY_04	"연세유"
 #define P2_CITY_05	"천문대"
-#define P2_CITY_06	"      "
+#define P2_CITY_06	ACADEMY
 #define P2_CITY_07	"이과대"
 #define P2_CITY_08	GOLDEN_KEY
 #define P2_CITY_09	"대강당"
@@ -113,7 +115,7 @@ extern clock_t timepass;
 #define P2_CITY_15	GOLDEN_KEY
 #define P2_CITY_16	"정빈관"
 #define P2_CITY_17	"도서관"
-#define P2_CITY_18	"      "
+#define P2_CITY_18	MT
 #define P2_CITY_19	"간호대"
 #define P2_CITY_20	GOLDEN_KEY
 #define P2_CITY_21	"자유관"

@@ -18,9 +18,6 @@
     <ClCompile Include="BasicIO.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Goldenkey.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -36,9 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicIO.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Goldenkey.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="Marble.h">

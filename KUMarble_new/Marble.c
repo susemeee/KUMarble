@@ -15,7 +15,8 @@
 void KUMarble ()
 {
 // 변수 선언
-	int turn, dice[2], key;
+	int turn, key;
+	//int dice[2] = {0,};
 	int i, loopin,  around, nowpos;
 	PLAYER player[PLAYER_NUMBER];
 //	CITY city[CITY_NUMBER];
@@ -23,8 +24,6 @@ void KUMarble ()
 
 //변수 초기화
 	turn = 0; // 플레이어 turn의 턴
-	dice[0] = 0; // 주사위 굴려서 이동하는 정도
-	dice[1] = 0;
 	key = 0;
 	i = 0; // 임시변수
 	nowpos = 0; // 현재 위치
@@ -54,12 +53,12 @@ void KUMarble ()
 		SIO_PrtPlayer(player);	  // 말을 그린다.
 		SIO_PrtInfo(player, univ);// 돈 현황 표시
 		SIO_PrtLogo(univ);		  //대학 현황 표시
-		SIO_PrtMinigameBase();
+		//SIO_PrtMinigameBase();
 
 		// 대학 로고 레벨 검사
 		ML_UnivLevelUp(turn, player, univ);
 
-		key = ML_ThrowDice(turn, dice); // 주사위를 굴린다
+		key = ML_ThrowDice(turn, NULL); // 주사위를 굴린다
 		if (key == QUIT_ESC) // 종료
 			return;
 		else if (key == CHEAT) // 치트
@@ -67,16 +66,29 @@ void KUMarble ()
 			player[turn].money += 300; // 돈을 더해주고
 			SIO_PrtInfo(player, univ); // 정보 갱신
 		}
+#ifdef DEBUG
+	key = 8;
+#endif
 
 // 플레이어를 이동한다
-		around = SIO_MovePlayerEffect(&player[turn], turn, dice[0] + dice[1]);
+		around = SIO_MovePlayerEffect(&player[turn], turn, key);
 		gotoxy(14, 8); printf("   ");
 		if (around) // 한바퀴 돌았을 경우 (= 시작을 지났을 경우)
 			ML_RoundMoney(turn, player, univ); // 장학금 지급
 
 // 땅 구매 or 수업료 뜯어먹기
+// 황금열쇠 process 먼저
 		nowpos = player[turn].pos;
-		if (board[nowpos].owner == -1 && IsSpecialCity(nowpos) == 0)
+		
+		if(strcmp(board[nowpos].name, GOLDEN_KEY) == 0)
+		{ // 황금열쇠 칸을 밟았을 경우
+			ML_ProcessGoldenKey(turn, nowpos, player, univ);
+		}
+		else if(IsSpecialCity(nowpos) != 0)
+		{
+			ML_ProcessSpecial(turn, nowpos, player, univ);
+		}
+		else if (board[nowpos].owner == -1 && IsSpecialCity(nowpos) == 0)
 		{// 정복되지 않은 땅 & 구매 가능한 땅이면
 			ML_BuyCity(turn, nowpos, player, univ);	// 땅을 산다
 		}
@@ -87,14 +99,6 @@ void KUMarble ()
 		else if (board[nowpos].owner != turn && board[nowpos].owner != -1)
 		{ // 남의 땅이고, 구매된 경우만
 			ML_PayLessonFee(turn, nowpos, player, univ); // 수업료를 지불한다
-		}
-		else if(strcmp(board[nowpos].name, GOLDEN_KEY) == 0)
-		{ // 황금열쇠 칸을 밟았을 경우
-			ML_ProcessGoldenKey(player, univ);
-		}
-		else if(strcmp(board[nowpos].name, HOSPITAL) == 0)
-		{
-			ML_ProcessHospital(player, univ);
 		}
 		turn = ML_ChangeTurn(turn); // 차례를 바꿔준다
 
@@ -203,8 +207,15 @@ void InitPlayerStruct (PLAYER *player)
 
 void InitCityStruct (CITY* city, const int whatuniv, const int pos)
 {
+	char* temp_name = IsSpecialCity(pos);
 	city->pos = 0;
 	city->name[0] = '\0';
+	
+	if(temp_name != '\0')
+	{//중립 건물은 내부적으로 이름 미리 등록
+		strncpy(city->name, temp_name, 32);
+	}
+
 	if (whatuniv == P1)
 	{
 		switch (pos) // 고대 비싼 건물의 가격 변경은 여기서
@@ -257,25 +268,107 @@ void InitUnivStruct (UNIV *univ, const int whatuniv)
 	// 굳이 strcpy를 안 쓴 이유 : 오버플로우 방지
 }
 
-int IsSpecialCity(int city) // 중립 지역
+char* IsSpecialCity(int city) // 중립 지역이라면 이름을 반환
 {
-	int i = 0;
 	switch (city)
 	{
 	case 0: // 시작지
-	case 6: // (모서리)
+		return "START";
 	case 8: // 황금열쇠
-	case 12: // 병원 (모서리)
 	case 15: // 황금열쇠
-	case 18: // (모서리)
 	case 20: // 황금열쇠
-		i = 1;
-		break;
+		return GOLDEN_KEY;
+	case 6: // 대학원 (모서리)
+		return ACADEMY;
+	case 18: // 엠티 (모서리)
+		return MT;
+	case 12: // 병원 (모서리)
+		return HOSPITAL;
 	default:
-		i = 0;
-		break;
+		return '\0';
 	}
-	return i;
+}
+
+void PrtBasic()
+{ //기본틀
+	gotoxy(12,14); printf("  │  │");
+	gotoxy(12,15); printf("┌┘  └┐");
+	gotoxy(12,16); printf("│      │");
+	gotoxy(12,17); printf("│      │");
+	gotoxy(12,18); printf("│●●●│");
+	gotoxy(12,19); printf("│●●●│");
+	gotoxy(12,20); printf("└───┘");
+}
+
+int DiceEffect()
+{
+	int x,y;
+	int i,j,k;
+	int dice;
+	PrtBasic();
+	for ( i=1; i<=20; i++ ) 
+	{
+		for ( j=1; j<=5; j++ ) 
+		{ //틀안에 원 무작위 출력
+			x = RandNum(14,18);
+			y = RandNum(16,19);
+			gotoxy(x,y); printf("●");
+		}
+		Sleep(50);
+		gotoxy(12,16); printf("│      │"); //지우고
+		gotoxy(12,17); printf("│      │");
+		gotoxy(12,18); printf("│      │");
+		gotoxy(12,19); printf("│      │");
+	}
+	Sleep(100);
+	gotoxy(12,14); printf("  │  │");//기본틀출력
+	gotoxy(12,15); printf("┌┘●└┐");
+	gotoxy(12,16); printf("│      │");
+	gotoxy(12,17); printf("│   ● │");
+	gotoxy(12,18); printf("│●    │");
+	gotoxy(12,19); printf("│ ● ●│");
+	gotoxy(12,20); printf("└───┘");
+
+	
+	Sleep(100);
+	gotoxy(12,14); printf("  │●│");//기본틀출력
+	gotoxy(12,15); printf("┌┘  └┐");
+	gotoxy(12,16); printf("│      │");
+	gotoxy(12,17); printf("│   ● │");
+	gotoxy(12,18); printf("│●    │");
+	gotoxy(12,19); printf("│ ● ●│");
+	gotoxy(12,20); printf("└───┘");
+	
+	Sleep(100);
+	gotoxy(16,12); printf("●");
+	gotoxy(12,14); printf("  │  │");//기본틀출력
+	gotoxy(12,15); printf("┌┘  └┐");
+	gotoxy(12,16); printf("│      │");
+	gotoxy(12,17); printf("│   ● │");
+	gotoxy(12,18); printf("│●    │");
+	gotoxy(12,19); printf("│ ● ●│");
+	gotoxy(12,20); printf("└───┘");
+
+	Sleep(100);
+	gotoxy(16,12); printf("◐");
+	Sleep(100);
+	dice = RandNum(1,12);
+	gotoxy(16,12);
+	switch(dice) {
+		case 1: printf("①"); break;
+		case 2: printf("②"); break;
+		case 3: printf("③"); break;
+		case 4: printf("④"); break;
+		case 5: printf("⑤"); break;
+		case 6: printf("⑥"); break;
+		case 7: printf("⑦"); break;
+		case 8: printf("⑧"); break;
+		case 9: printf("⑨"); break;
+		case 10: printf("⑩"); break;
+		case 11: printf("⑪"); break;
+		case 12: printf("⑫"); break;
+	}
+	return dice;
 }
 
 
@@ -375,7 +468,7 @@ int ML_ThrowDice(int turn, int dice[]) // 주사위 굴리기
 		return QUIT_ESC;
 
 // 주사위 굴림 효과
-	SIO_TurnColor(CL_BT);
+	/*SIO_TurnColor(CL_BT);
 	for (i = 0; i < 30; i++)
 	{
 		dice[0] = RandNum(1, 6);
@@ -383,8 +476,8 @@ int ML_ThrowDice(int turn, int dice[]) // 주사위 굴리기
 		gotoxy(14, 8);
 		printf("%d %d", dice[0], dice[1]);
 		Delay(i);
-	}
-	return key;
+	}*/
+	return DiceEffect();
 }
 
 void ML_RoundMoney(int turn, PLAYER player[], UNIV univ[]) // 한 바퀴 돌면 주는 장학금
@@ -451,8 +544,8 @@ void ML_BuyCity(int turn, int nowpos, PLAYER player[], UNIV univ[])  // 건물 짓�
 			gotoxy(12, 7);	printf("비용 : %d만원 [Y/N] ", need);
 
 			do{
-			key = getch();
-			}while(key == 'Y' || key == 'y' || key == 'N' || key == 'n');
+				key = getch();
+			}while(key != 'Y' && key != 'y' && key != 'N' && key != 'n');
 		}
 		else if (turn == P2) // 연대생 (AI)
 		{
@@ -500,7 +593,9 @@ void ML_UpgradeCity(int turn, int nowpos, PLAYER player[], UNIV univ[])  // 건물
 			gotoxy(11, 7);	printf("                                    ");
 			gotoxy(11, 7);	printf("비용 : %d만원 [Y/N] ", need);
 
-			key = getch();
+			do{
+				key = getch();
+			}while(key != 'Y' && key != 'y' && key != 'N' && key != 'n');
 		}
 		else if (turn == P2) // 연대생 (AI)
 		{
@@ -702,29 +797,62 @@ void ML_PrintStory()
 
 }
 
-void ML_ProcessGoldenKey(PLAYER player, UNIV univ)
+void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[])
 {
-	const char * wildlife_name[4] = {"임재민", "이동방", "윤민아", "김낙현"};
+	const char*	wildlife_name[4] = {"임재민", "이동방", "윤민아", "김낙현"};
+	const char* univ_name[2] = {"고대", "연대"};
 	gotoxy(12, 7);
 
-	switch(rand()%3)
+	switch(rand()%5)
 	{
 
 	case 0:		//히어로(야생의 임재민을 만났다!)
-		printf("야생의 %s를\n만났다!", wildlife_name[(int)rand()%4]);
+		printf("야생의 %s를 만났다!", wildlife_name[(int)rand()%4]);
 
 		break;
 
-	case 1:		//장학금 받기
-		//printf
+	case 1:		//장학금 받기 
+					  printf("%s생이 미적과 물리 A+를 받아");
+		gotoxy(12,8); printf("장학금 %d만원이 주어졌습니다.", univ_name[turn], 123);
+		player[turn].money += 123;
 		break;
 
-	case 2:		//성인지 감수성 교육
+	case 2:		//성인지 감수성 교육 또는 채플
+		if(turn == P1)
+		{
+						  printf("채플을 들었습니다!");
+			gotoxy(12,8); printf("연대생 친구가 삥을 뜯어 돈을 주었습니다.");
+			player[P1].money -= (nowpos%4+1)*10;
+			player[P2].money += (nowpos%4+1)*10;
+		}
+		else if(turn == P2)
+		{
+						  printf("성인지 감수성 교육을 들었습니다!");
+			gotoxy(12,8); printf("고대생 친구가 삥을 뜯어 돈을 주었습니다.");
+			player[P1].money += (nowpos%4+1)*10;
+			player[P2].money -= (nowpos%4+1)*10;
+		}
+
+		break;
+
+	case 3:		//태풍으로 건물 무너지는 이벤트
+
+		break;
+
+	case 4:		//건물 무상업글 이벤트
+
 		break;
 	}
+
+	SIO_PrtInfo(player, univ);	//정보 갱신
+
+	Delay(WAIT);
 }
 
-void ML_ProcessHospital(PLAYER player, UNIV univ)
+void ML_ProcessSpecial(int turn, int nowpos, PLAYER player[], UNIV univ[])
 {
+	switch(nowpos)
+	{
 
+	}
 }
