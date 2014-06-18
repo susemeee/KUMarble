@@ -799,9 +799,10 @@ void ML_PrintStory()
 
 void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[])
 {
+	int amount, rValue, i;
 	const char*	wildlife_name[4] = {"임재민", "이동방", "윤민아", "김낙현"};
 	const char* univ_name[2] = {"고대", "연대"};
-	gotoxy(12, 7);
+	gotoxy(12, 6);
 
 	switch(rand()%5)
 	{
@@ -810,43 +811,88 @@ void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[])
 		printf("야생의 %s를 만났다!", wildlife_name[(int)rand()%4]);
 
 		break;
-
 	case 1:		//장학금 받기 
+		amount = (5+(rand()*100)%15)*10;	//50 ~ 200만원
+		
 					  printf("%s생이 미적과 물리 A+를 받아");
-		gotoxy(12,8); printf("장학금 %d만원이 주어졌습니다.", univ_name[turn], 123);
-		player[turn].money += 123;
+		gotoxy(12,7); printf("장학금 %d만원이 주어졌습니다.", univ_name[turn], amount);
+		player[turn].money += amount;
 		break;
-
 	case 2:		//성인지 감수성 교육 또는 채플
+		amount = (1+(rand()*100)%10)*10;				//10 ~ 110만원
 		if(turn == P1)
 		{
 						  printf("채플을 들었습니다!");
-			gotoxy(12,8); printf("연대생 친구가 삥을 뜯어 돈을 주었습니다.");
-			player[P1].money -= (nowpos%4+1)*10;
-			player[P2].money += (nowpos%4+1)*10;
+			gotoxy(12,7); printf("연대생 친구가 삥을 뜯어");
+			gotoxy(12,8); printf("%d만원을 주었습니다.", amount);
+			player[P1].money -= amount;
+			player[P2].money += amount;
 		}
 		else if(turn == P2)
 		{
 						  printf("성인지 감수성 교육을 들었습니다!");
-			gotoxy(12,8); printf("고대생 친구가 삥을 뜯어 돈을 주었습니다.");
-			player[P1].money += (nowpos%4+1)*10;
-			player[P2].money -= (nowpos%4+1)*10;
+			gotoxy(12,7); printf("고대생 친구가 삥을 뜯어");
+			gotoxy(12,8); printf("%d만원을 주었습니다.", amount);
+			player[P1].money += amount;
+			player[P2].money -= amount;
 		}
 
 		break;
 
 	case 3:		//태풍으로 건물 무너지는 이벤트
-
+						  printf("태풍 ㅇㅁㅇ;;이 학교를 덮쳤습니다!");
+			gotoxy(12,7); printf("건물 하나가 다운그레이드됩니다.");
+			
+			for(i=0; i<24; i++)
+			{
+				if(board[i].owner == turn && board[i].level > -1)
+				{
+					if(board[i].level == 0)		//건물 삭제
+					{
+						board[i].name[0] = '\0';
+						board[i].owner = -1;
+						board[i].level = -1;
+					}
+					board[i].level--;
+					gotoxy(12,9); printf("%s이(가) 파괴되었습니다!", CityName(turn, i));
+				}
+			}
+						
 		break;
 
 	case 4:		//건물 무상업글 이벤트
+						  printf("S모 회사에서 학교에 지원금을 주었다!");
+			gotoxy(12,7); printf("건물 하나가 업그레이드됩니다.");
+			rValue = rand()%2;
 
+			if(rValue == 0)		//두 방법 중 하나의 방법으로 건물 랜덤하게 결정
+			{
+				for(i=0; i<24; i++)
+				{
+					if(board[i].owner == turn && board[i].level < 3)
+					{
+						board[i].level++;
+						gotoxy(12,9); printf("%s이(가) 증축되었습니다!", CityName(turn, i));
+					}
+				}
+			}
+			else
+			{
+				for(i=23; i>=0; i--)
+				{
+					if(board[i].owner == turn && board[i].level < 3)
+					{
+						board[i].level++;
+						gotoxy(12,9); printf("%s이(가) 증축되었습니다!", CityName(turn, i));
+					}
+				}
+			}
 		break;
 	}
 
 	SIO_PrtInfo(player, univ);	//정보 갱신
 
-	Delay(WAIT);
+	Delay(WAIT * 2);
 }
 
 void ML_ProcessSpecial(int turn, int nowpos, PLAYER player[], UNIV univ[])

@@ -184,6 +184,22 @@ void SIO_PrtLogo(const UNIV *univ)
 	SIO_TurnColor(P1_SEMI);
 	if (univ[P1].level == 1)
 	{
+		gotoxy(78, 1);	printf("  고양이                                ");
+		gotoxy(78, 2);	printf("  응애응애        ..                    ");
+		gotoxy(78, 3);	printf("                 .r:                    ");
+		gotoxy(78, 4);	printf("                 7,.:                   ");
+		gotoxy(78, 5);	printf("                 r:.;:.                 ");
+		gotoxy(78, 6);	printf("                :7:...:ri:::            ");
+		gotoxy(78, 7);	printf("                XY..,,iE7jLvjv..    ..r,");
+		gotoxy(78, 8);	printf("               iv:,riiuPrri:iU.iu7r;iL: ");
+		gotoxy(78, 9);	printf("              .::::.::7.EXq1Mvi:.vviu:  ");
+		gotoxy(78, 10);	printf("              2qv:,SBu .u2rrj,uO77vP7   ");
+		gotoxy(78, 11);	printf("             .i,75i..2::r;B@BZ;5r.1r    ");
+		gotoxy(78, 12);	printf("              rr: .: vBG@B::vii7BY      ");
+		gotoxy(78, 13);	printf("               ..    .O7ijirk0v;BM      ");
+	}
+	else if (univ[P1].level == 2)
+	{
 		gotoxy(78, 1);	printf("  고양이           Y$ov:                ");
 		gotoxy(78, 2);	printf("  야옹야옹        :M$vYzC..     .;Y     ");
 		gotoxy(78, 3);	printf("                  Y9;iCb#$$IiivcCI:     ");
@@ -197,22 +213,6 @@ void SIO_PrtLogo(const UNIV *univ)
 		gotoxy(78, 11);	printf("      :YI$C:tQC7X1Uo7nEbZZZZ2i          ");
 		gotoxy(78, 12);	printf("    oEMM,Y1vC2i. ,;vC i86WQCUi          ");
 		gotoxy(78, 13);	printf("    ;UQ#YA@MYCZWb7C;CYbMME7oSEo;        ");
-	}
-	else if (univ[P1].level == 2)
-	{
-		gotoxy(78, 1);	printf("        ㄱ   ㄹㅕ                        ");
-		gotoxy(78, 2);	printf("        ㅗ                               ");
-		gotoxy(78, 3);	printf(" K   K    OOOO                           ");
-		gotoxy(78, 4);	printf(" K   K   OO  OO                          ");
-		gotoxy(78, 5);	printf(" K   K   O    O                          ");
-		gotoxy(78, 6);	printf(" K  KK   O    O                          ");
-		gotoxy(78, 7);	printf(" K KK    O    O                          ");
-		gotoxy(78, 8);	printf(" KKK     O    O                          ");
-		gotoxy(78, 9);	printf(" K KK    O    O                          ");
-		gotoxy(78, 10);	printf(" K  KK   O    O                          ");
-		gotoxy(78, 11);	printf(" K   K   O    O                          ");
-		gotoxy(78, 12);	printf(" K   K   OO  OO                          ");
-		gotoxy(78, 13);	printf(" K   K    OOOO                           ");
 	}
 	else if (univ[P1].level == 3)
 	{
