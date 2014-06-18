@@ -8,8 +8,8 @@
 typedef struct JUSTITIA
 {
 	char name[100];
-	int x;
-	int y;
+	size_t x;
+	size_t y;
 } BUTTON;
 
 #define C_X(X) ((X) * 8) // Mouse.h에 쓰는것.

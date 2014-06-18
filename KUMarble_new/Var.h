@@ -11,7 +11,8 @@
 #define TRUE 1
 #define FALSE 0
 
-#define WAIT 800
+#define WAIT 700
+#define MONEY_BASE 30
 #define PLAYER_NUMBER 2
 #define CITY_NUMBER 24
 
@@ -40,12 +41,13 @@ struct player_info
 	int pos;
 	int money;
 	int round;
+	int dice_limit;	//특정 횟수만큼 주사위 턴이 제한
+	int goza;		//특정 횟수만큼 쉬는 코드 
 };
 typedef struct player_info PLAYER;
 
 struct city_info
 {
-	int pos;
 	int cost;
 	char name[32];
 	int owner;
@@ -66,7 +68,7 @@ extern CITY board[CITY_NUMBER];
 extern int difficulty;
 extern clock_t timepass;
 
-// 건물 이름들
+//건물 이름들
 #define GOLDEN_KEY	"열§쇠"
 #define HOSPITAL " 병원 "
 #define ACADEMY "대학원"

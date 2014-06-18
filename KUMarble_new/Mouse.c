@@ -19,14 +19,26 @@ BUTTON* CreateButton ( char n[], int x, int y )
 
 void PrtButton( BUTTON *b )
 { //¹öÆ°Ãâ·ÂÇÔ¼ö
-	int i;
+	size_t i, prtlen, len;
 	COLOR_BUTTON; //¹öÆ°»ö
+	len = strlen(b->name);
+	if (len % 2 == 0) // Â¦¼ö
+		prtlen = len / 2;
+	if (len % 2 == 1) // È¦¼ö
+		prtlen = (len + 1) / 2;
+
 	gotoxy(b->x, b->y); printf("¦£");
-	for ( i=1; i<=strlen(b->name)/2; i++ ) printf("¦¡");
+	for (i = 1; i <= prtlen / 2; i++)
+		printf("¦¡");
 	printf("¦¤");
-	gotoxy(b->x,b->y+1); printf("¦¢%s¦¢",b->name);
+	gotoxy(b->x,b->y+1);
+	if (len % 2 == 0) // Â¦¼ö
+		printf("¦¢%s¦¢",b->name);
+	if (len % 2 == 1) // È¦¼ö
+		printf("¦¢%s ¦¢", b->name);
 	gotoxy(b->x,b->y+2); printf("¦¦");
-	for ( i=1; i<=strlen(b->name)/2; i++ ) printf("¦¡");
+	for (i = 1; i <= prtlen / 2; i++)
+		printf("¦¡");
 	printf("¦¥");
 }
 
@@ -37,7 +49,7 @@ int ChkButton ( BUTTON *b )
 	GetCursorPos(&a);
 	h = WindowFromPoint(a);
 	ScreenToClient(h,&a);
-	if ( C_X(b->x)<=a.x && a.x<=C_X(b->x+strlen(b->name)+2) && C_Y(b->y)<=a.y && a.y<=C__Y(b->y) ) {
+	if (C_X(b->x) <= (unsigned)a.x && (unsigned)a.x <= C_X(b->x + strlen(b->name) + 2) && C_Y(b->y) <= (unsigned)a.y && (unsigned) a.y <= C__Y(b->y)) {
 		PrtButton(b);
 		return 1;
 	}

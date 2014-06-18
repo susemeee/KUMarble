@@ -23,9 +23,9 @@ int main (int argc, char* argv[])
 	printf("Adjusting Screen...\n");
 	SIO_InitConsoleSize(30); // 창 크기 조정
 	SetConsoleTitleA("KUMarble : 고연전"); // 창 이름 조정
-	system("color 07"); // 바탕 검정 전경 흰색
+	system("color F0"); // 바탕 흰식 전경 검정
 	//TextColor(RGB8(1, 1, 1, 0));
-	BGColor(RGB8(0, 0, 0, 0));
+	BGColor(RGB8(1, 1, 1, 1));
 
 // 시드 설정
 	srand((unsigned int)time(NULL));
@@ -34,12 +34,12 @@ int main (int argc, char* argv[])
 	cursorinit(); // 커서가 버퍼를 넘어가면 gotoxy가 정상작동하지 않는다.
 
 #ifndef DEBUG
-	TextColor(RGB8(1,1,1,1));
+	TextColor(RGB8(0,0,0,0));
 	ML_PrintStory();
 #else
 	TextColor(RGB8(1,0,0,1));
 	printf("\nDebug mode activated. please turn of this before production.\n\n");
-	TextColor(RGB8(1,1,1,1));
+	TextColor(RGB8(0,0,0,0));
 #endif
 
 	loopin = 1;

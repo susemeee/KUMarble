@@ -449,19 +449,19 @@ void SIO_PrtCityName (int n)
 void SIO_TurnColor(int n)
 {
 	if (n == BG)
-		TextColor(RGB8(1, 1, 1, 1)); // WHITE
+		TextColor(RGB8(0, 0, 0, 0)); // WHITE
 	else if (n == NEUTRAL)
-		TextColor(RGB8(0, 1, 0, 1)); // GREEN
+		TextColor(RGB8(0, 1, 0, 0)); // GREEN
 	else if (n == P1)
 		TextColor(RGB8(1, 0, 0, 1)); // RED
 	else if (n == P2)
 		TextColor(RGB8(0, 0, 1, 1)); // BLUE
 	else if (n == P1_SEMI)
-		TextColor(RGB8(1, 1, 0, 1)); // YELLOW
+		TextColor(RGB8(1, 0, 0, 0)); // DARK RED
 	else if (n == P2_SEMI)
-		TextColor(RGB8(0, 1, 1, 1)); // SKYBLUE
+		TextColor(RGB8(0, 0, 1, 0)); // DARK BLUE
 	else if (n == CL_BT)
-		TextColor(RGB8(0, 1, 0, 1)); // GREEN
+		TextColor(RGB8(0, 1, 0, 0)); // GREEN
 }
 
 void SIO_PrtPlayer(const PLAYER *p)
@@ -617,7 +617,7 @@ void SIO_PrtMinigameBase()
 	int i;
 
 	gotoxy(76, 0);
-	printf("┌───── 미니  게임 ─────────┐");
+	printf("┌─────── 미니  게임 ───────┐");
 	for(i=1; i<=28; i++)
 	{
 		gotoxy(76, i); printf("│");
@@ -625,7 +625,7 @@ void SIO_PrtMinigameBase()
 	}
 	gotoxy(76, 29);
 	printf("└────────────────────┘");
-	
+
 }
 
 void SIO_PrintMsg(char* msg)
@@ -634,8 +634,8 @@ void SIO_PrintMsg(char* msg)
 	int x = 60 - msg_len/2;
 	int y = 10;
 	int i, ctr=1;
-	
-	gotoxy(x, y);	
+
+	gotoxy(x, y);
 	for(i=0; i<msg_len; i++)
 	{
 		printf("%c", msg[i]);
