@@ -1,5 +1,5 @@
-#ifndef MARBLE_H_INCLUDED
-#define MARBLE_H_INCLUDED
+#ifndef MARBLE_H
+#define MARBLE_H
 
 // 게임의 중추
 void KUMarble ();
@@ -26,8 +26,9 @@ void ML_UpgradeCity(int turn, int nowpos, PLAYER player[], UNIV univ[]);	// 건물
 void ML_PayLessonFee(int turn, int nowpos, PLAYER player[], UNIV univ[]);	// 수업료 지불
 void ML_Ending(PLAYER player[], UNIV univ[]);	// 승패 판단
 
-void ML_ProcessSpecial(int turn, int nowpos, PLAYER player[], UNIV univ[]);
-void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[]);
+void ML_ProcessSpecial(int turn, int nowpos, PLAYER player[], UNIV univ[]);	//황금열쇠 칸 처리
+void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[]);	//특별한 칸 처리
+void ML_ChamChamCham(int turn, PLAYER player[], UNIV univ[]); //참참참 게임
 
 void ML_PrintStory();
 

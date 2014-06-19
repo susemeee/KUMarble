@@ -3,7 +3,7 @@
 
 #include <time.h>
 
-#define DEBUG
+//#define DEBUG
 
 #define KMVER 1.0
 #define KMDATE "2014.05.21"
@@ -34,6 +34,10 @@
 #define P1_SEMI 10
 #define P2_SEMI 11
 #define CL_BT 50
+
+#define CHAM_TOP 0
+#define CHAM_LEFT 1
+#define CHAM_RIGHT 2
 
 // ±¸Á¶Ã¼
 struct player_info

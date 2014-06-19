@@ -24,10 +24,10 @@
     <ClCompile Include="Marble.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Mouse.c">
+    <ClCompile Include="SurfaceIO.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SurfaceIO.c">
+    <ClCompile Include="Mouse.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

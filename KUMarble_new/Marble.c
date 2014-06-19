@@ -80,7 +80,7 @@ void KUMarble ()
 				SIO_PrtInfo(player, univ); // 정보 갱신
 			}
 	#ifdef DEBUG
-		key = 12;
+		key = 6;
 	#endif
 
 	// 플레이어를 이동한다
@@ -116,7 +116,7 @@ void KUMarble ()
 		}
 		turn = ML_ChangeTurn(turn); // 차례를 바꿔준다
 
-		if (player[P1].round > 16 || player[P2].round > 16) // 게임 종료 조건 - 16바퀴를 돌아야 한다.
+		if (player[P1].round > 16 || player[P2].round > 16 || univ[P1].level == 5 || univ[P2].level == 5) // 게임 종료 조건 - 16바퀴를 돌아야 한다. 또는 대학 레벨이 5가 되면 승리한다
 			loopin = 0;
 	}
 	ML_Ending(player, univ); // 승패 판단
@@ -125,6 +125,12 @@ void KUMarble ()
 
 char* CityName(const int whatuniv, const int pos)
 {
+	char* result = IsSpecialCity(pos);
+	if(result != 0)
+	{
+		return result;
+	}
+
 	if (whatuniv == P1)
 	{
 		if (pos == 1)
@@ -430,7 +436,7 @@ int ML_ThrowDice(int turn, int dice_limit) // 주사위 굴리기
 	{
 		gotoxy(12, 6);	printf("고대생 차례입니다!                 ");
 		gotoxy(12, 7);	printf("주사위를 굴리세요.                 ");
-		gotoxy(12, 8);	printf("Pres any key to continue...");
+		gotoxy(12, 8);	printf("Press any key to continue...");
 		key = getch(); // 키 입력을 받는다
 		gotoxy(12, 8);	printf("                                   ");
 	}
@@ -768,7 +774,7 @@ void ML_PrintStory()
 ,
 "\"한국 원탑 대학교의 자리는 바로 나야!\"\n-고려대학교 학장 병처으리"
 ,
-"\"그럴 리가, 고려학교는 연세대학의 발끝만도 못 따라온다고!\n-연새대학교 학장 정갑영"
+"\"그럴 리가, 고려학교는 연세대학의 발끝만도 못 따라온다고!\n-연새대학교 학장 가병이"
 ,
 "한국 원탑 대학교의 자리를 놓고,\n두 대학의 사활을 건 전쟁이 시작된다!"
 ,
@@ -826,16 +832,18 @@ int ML_CityCost (int whatuniv, int pos)
 void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[])
 {
 	int amount = 0, rValue, i, loopin = 1;
-	const char* wildlife_name[4] = {"임재민", "이동방", "윤민아", "김낙현"};
+	const char* wildlife_name[4] = {"천사 뷰에게 경고받은 조민환을", "출튀 잡으시는 정빈 교수님을", "아청아청(누군지 알겠지?)을", "2반 배신의 아이콘 3지석을"};
 	const char* univ_name[2] = {"고대", "연대"};
 	gotoxy(12, 6);
 
-	switch(rand()%5)
+	switch(rand()%5) //rand()%5
 	{
 
 	case 0:		//히어로(야생의 임재민을 만났다!)
-		printf("야생의 %s를 만났다!", wildlife_name[(int)rand()%4]);
-
+		gotoxy(11,6); printf("%s 만났다!", wildlife_name[rand()%4]);
+		gotoxy(11,7); printf("참참참 게임을 해서 이긴다면");
+		gotoxy(11,8); printf("치느님을 사 주지.");
+		ML_ChamChamCham(turn, player, univ);
 		break;
 	case 1:		//장학금 받기
 		// 쉬움   장학금 = 기본금 * (대학레벨 * 0.7) * (1 + (자신이 회전한 바퀴 수 * 0.25)) * (0.5~3.0 사이)
@@ -862,6 +870,7 @@ void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[])
 				i = RandNum(40, 60);
 			amount = (int) pow(((i / 2.0) * univ[ML_ChangeTurn(turn)].level), (1 + (double) player[ML_ChangeTurn(turn)].round / 32));
 		}
+		SIO_TurnColor(turn); 
 		if(turn == P1)
 		{
 						  printf("채플을 들었습니다!             ");
@@ -893,9 +902,14 @@ void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[])
 					if (board[i].owner == turn && board[i].level > -1)
 					{
 						if(board[i].level == 0)		//건물 삭제
-							InitCityStruct(&board[i], i);
+						{
+							InitCityStruct(&board[i], i); 
+							univ[turn].city_count--;
+						}
 						else
+						{
 							board[i].level--;
+						}
 						gotoxy(12,9); printf("%s이(가) 파괴되었습니다!", CityName(turn, i));
 						loopin = 0;
 					}
@@ -908,9 +922,14 @@ void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[])
 					if (board[i].owner == turn && board[i].level > -1)
 					{
 						if(board[i].level == 0)		//건물 삭제
-							InitCityStruct(&board[i], i);
+						{
+							InitCityStruct(&board[i], i); 
+							univ[turn].city_count--;
+						}
 						else
+						{
 							board[i].level--;
+						}
 						gotoxy(12,9); printf("%s이(가) 파괴되었습니다!", CityName(turn, i));
 						loopin = 0;
 					}
@@ -958,13 +977,55 @@ void ML_ProcessGoldenKey(int turn, int nowpos, PLAYER player[], UNIV univ[])
 
 void ML_ProcessSpecial(int turn, int nowpos, PLAYER player[], UNIV univ[])
 {
-	int goza;
+	BT button[24];
+	int goza, i;
+	int loopin = 1;
+	int x = 0, y = 0;
 	switch(nowpos)
 	{
+
 		case 6: // 대학원 (모서리)
 			gotoxy(12,6); printf("대학원에 진학합니다!");
 			gotoxy(12,7); printf("원하는 칸으로 이동할 수 있습니다.");
-			gotoxy(12,8); printf("원하는 칸을 마우스로 클릭해 주세요.");
+
+			if(turn == P1)
+			{
+				gotoxy(12,8); printf("원하는 칸을 마우스로 클릭해 주세요.");
+				// 가상의 24개 버튼 생성
+				for(i=0; i<24; i++)
+				{
+					SIO_CalcPos(i, &x, &y);
+					button[i] = CreateButton("  ", x, y-2);
+					PrtButton(button[i]);
+				}
+				while(loopin)
+				{
+					for(i=0; i<24; i++)
+					{
+						if ( CLICK_LEFT && ChkButton(button[i]))
+						{
+							gotoxy(0,0);
+							SIO_InitBoard();
+							SIO_DrawBoard();
+							// 상대방의 위치를 다시 그려줌
+							SIO_JumpPlayerEffect(&player[P2], P2, player[P2].pos);
+							
+							SIO_TurnColor(turn);
+							gotoxy(12,6); printf("%s(으)로 이동합니다!", CityName(turn, i));
+							SIO_JumpPlayerEffect(&player[P1], turn, i);
+							loopin = 0;
+							break;
+						}
+					}
+				}
+			}
+			else
+			{
+				Delay(WAIT);
+				i = rand()%24;
+				gotoxy(12,8); printf("%s(으)로 이동합니다!", CityName(turn, i));
+				SIO_JumpPlayerEffect(&player[P2], turn, i);
+			}
 			break;
 		case 18: // 엠티 (모서리)
 			gotoxy(12,6); printf("MT에서 술을 마시고 뻗었습니다!");
@@ -981,4 +1042,71 @@ void ML_ProcessSpecial(int turn, int nowpos, PLAYER player[], UNIV univ[])
 
 	SIO_PrtInfo(player, univ);	//정보 갱신
 	Delay(WAIT * 2);
+}
+
+
+void ML_ChamChamCham(int turn, PLAYER player[], UNIV univ[])
+{
+	char ch;
+	int cham[2] = {0,};
+	int amount;
+	SIO_PrtMinigameBase();
+	gotoxy(80, 5); printf("참참참 게임");
+	if(turn == P1)
+	{
+		gotoxy(80, 6); printf("왼쪽은 A, 오른쪽은 D");
+		gotoxy(80, 7); printf("시작하려면 아무 키나 누르세요.");
+		getch();
+	}
+	SIO_TurnColor(turn);
+	SIO_PrintCham(CHAM_TOP);
+	Delay(WAIT);
+	SIO_PrtMinigameBase();
+	Delay(WAIT);
+	SIO_PrintCham(CHAM_TOP);
+	if(turn == P1)
+	{
+		do{
+			ch = getch();
+		}while(ch != 'A' && ch != 'a' && ch != 'D' && ch != 'd');
+
+		if(ch == 'A' || ch == 'a')
+		{
+			cham[P1] = CHAM_LEFT;
+		}
+		else if(ch == 'D' || ch == 'd')
+		{
+			cham[P1] = CHAM_RIGHT;
+		}
+	}
+	else
+	{
+		cham[P1] = rand()%2+1;
+	}
+	//1 or 2
+	cham[P2] = rand()%2+1;
+	SIO_PrintCham(cham[P2]);
+	
+	Delay(WAIT);
+	//맞췄을 경우
+	if(cham[P1] == cham[P2])
+	{
+		if (difficulty == GAME_EASY)
+			amount = (int) (MONEY_BASE * ((double) univ[turn].level * 0.7) * (1 + (double) player[turn].round * 0.25) * (RandNum(1, 6) / 2.0));
+		else if (difficulty == GAME_HARD)
+			amount = (int) (MONEY_BASE * univ[turn].level * (1 + (double) player[turn].round * 0.70) * (RandNum(1, 6) / 2.0));
+
+		gotoxy(78,25); printf("좋아.. 나를 이겼군");
+		gotoxy(78,26); printf("%d만원을 주도록 하지.", amount);
+
+		player[turn].money += amount;
+		SIO_PrtInfo(player, univ);
+	}
+	else
+	{
+		gotoxy(78,26); printf("아직 멀었군 ㅎㅎ 애송이");
+		gotoxy(78,26); printf("에휴 그냥 가라...");
+	}
+
+	Delay(WAIT*2);
 }
